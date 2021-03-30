@@ -1,30 +1,60 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import styles from '../../styles/Products.module.scss'
 import PropTypes, {object} from 'prop-types';
-import {getProduct} from "../../redux/actions/data-action";
+import {getConfig, getProduct} from "../../redux/actions/data-action";
 import {connect} from "react-redux";
 import {FaBriefcase, FaBuilding, FaUser} from "react-icons/fa";
-
+import Switch from "react-switch";
 import MoonLoader from "react-spinners/MoonLoader";
-import { css } from "@emotion/react";
+import {css} from "@emotion/react";
+import {GoogleMap, useJsApiLoader} from '@react-google-maps/api';
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
   display: block;
   margin: 0 auto;
   border-color: #272e71;
 `;
+const containerStyle = {
 
-const Loader = () =>{
-    return <MoonLoader color={'#272e71'} loading={true} css={override} size={30} />
+    width: '100%',
+    height: '100%'
+};
+
+
+const Loader = () => {
+    return <MoonLoader color={'#272e71'} loading={true} css={override} size={30}/>
 }
 
 const Products = (props) => {
+    const {getProduct, getConfig} = props
+    // const {data: {picture, name}} = props.data
+    const {loading, configLoading, data, configuration} = props.data
+
+    const [checked, setChecked] = useState(false);
+    const handleChange = nextChecked => {
+        setChecked(nextChecked);
+        getConfig(checked ? '1' : '2')
+    };
+
+    const {isLoaded} = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: "AIzaSyCmJ8mlmZyE-Wpt8ZrobB1q5aFFAsf_U0w"
+    })
+
+    const [map, setMap] = React.useState(null)
+
+    const onLoad = React.useCallback(function callback(map) {
+        const bounds = new window.google.maps.LatLngBounds();
+        map.fitBounds(bounds);
+        setMap(map)
+    }, [])
+
+    const onUnmount = React.useCallback(function callback(map) {
+        setMap(null)
+    }, [])
 
     const [tabSwitch, setTabSwitch] = useState(false);
 
-    const {getProduct} = props
-    // const {data: {picture, name}} = props.data
-    const {loading, data} = props.data
 
     const getProductDetails = useCallback(() => {
         getProduct()
@@ -53,17 +83,19 @@ const Products = (props) => {
                             data && <div className={styles.type}><span>Title:</span> {data.name}</div>
                     }
                     {
-                        loading ? <Loader/>:
+                        loading ? <Loader/> :
                             data && <div className={styles.type}><span>Type:</span> {data.type.name}</div>
                     }
                 </section>
                 <section className={styles.tabs}>
                     <div className={styles.tabBtnWrap}>
-                        <button className={ `${!tabSwitch && styles.active} `} onClick={() => setTabSwitch(prevState => !prevState)} disabled={!tabSwitch}>
+                        <button className={`${!tabSwitch && styles.active} `}
+                                onClick={() => setTabSwitch(prevState => !prevState)} disabled={!tabSwitch}>
                             Description
                         </button>
-                        <button className={ `${tabSwitch && styles.active} ` } onClick={() => setTabSwitch(prevState => !prevState)} disabled={tabSwitch}>
-Attributes
+                        <button className={`${tabSwitch && styles.active} `}
+                                onClick={() => setTabSwitch(prevState => !prevState)} disabled={tabSwitch}>
+                            Attributes
                         </button>
 
                     </div>
@@ -73,20 +105,19 @@ Attributes
                             !tabSwitch ? <div className={styles.Description}>
 
 
-
                                     {
                                         loading ? <Loader/> :
                                             data && <p>{data.description}</p>
                                     }
 
-                            </div> :
+                                </div> :
                                 <div className={styles.Attributes}>
                                     <ul>
                                         <span>Categories</span>
                                         {
-                                            loading ? <Loader/>:
+                                            loading ? <Loader/> :
                                                 data &&
-                                                data.categories.map((({name}, index)=>(
+                                                data.categories.map((({name}, index) => (
                                                     <li key={index}>
                                                         {
                                                             name
@@ -101,7 +132,7 @@ Attributes
                                         {
                                             loading ? <div>Loading...</div> :
                                                 data &&
-                                                data.businessModels.map((({name}, index)=>(
+                                                data.businessModels.map((({name}, index) => (
                                                     <li key={index}>
                                                         {
                                                             name
@@ -114,14 +145,14 @@ Attributes
                                     <ul>
                                         <span>TRL</span>
                                         {
-                                            loading ? <Loader/>:
+                                            loading ? <Loader/> :
                                                 data &&
                                                 <li>
 
-                                                        {
-                                                            data.trl.name
-                                                        }
-                                                    </li>
+                                                    {
+                                                        data.trl.name
+                                                    }
+                                                </li>
 
                                         }
 
@@ -132,6 +163,15 @@ Attributes
                 </section>
             </div>
             <div className={styles.rightBox}>
+                <label>
+                    <small>Switch app configuration</small>
+                    <Switch
+                        onChange={handleChange}
+                        checked={checked}
+                        className="react-switch"
+                    />
+                </label>
+
                 <section className={styles.userInfo}>
                     <div className={styles.userImage}>
 
@@ -160,8 +200,28 @@ Attributes
                         }
                     </span>
                 </section>
-                <section className={styles.maps}>
 
+
+                <section className={styles.maps}>
+                    {
+                        data && isLoaded ?
+                            <GoogleMap
+                                mapContainerStyle={containerStyle}
+                                center={
+                                    {
+                                        lat: data.company.latitude,
+                                        lng: data.company.longitude,
+                                    }
+                                }
+                                zoom={1}
+                                onLoad={onLoad}
+                                onUnmount={onUnmount}
+                            >
+                                { /* Child components, such as markers, info windows, etc. */}
+                                <></>
+
+                            </GoogleMap> : <Loader/>
+                    }
                 </section>
 
             </div>
@@ -171,11 +231,13 @@ Attributes
 
 Products.propTypes = {
     getProduct: PropTypes.func.isRequired,
+    getConfig: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired
 }
 
 const mapActionsToDispatch = {
-    getProduct
+    getProduct,
+    getConfig
 }
 
 const mapStateToProps = (state) => ({

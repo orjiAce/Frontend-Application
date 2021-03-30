@@ -17,6 +17,10 @@ a {
 
 $primary:#272e71;
 
+.react-switch {
+  vertical-align: middle;
+  margin-left: 4px;
+}
 .container {
   width: 100%;
   min-height: 100vh;
@@ -48,6 +52,7 @@ img{
   width: 280px;
   height: 100vh;
   background-color: #eee;
+
   ul{
     width: 80%;
     display: flex;
@@ -59,6 +64,9 @@ img{
       background-color: $primary;
       color: #ffffff;
       border: none;
+      &:hover{
+        color: #ffffff;
+      }
     }
     li{
       width:80%;
@@ -122,6 +130,7 @@ img{
     height: 90px;
     background-color: #98a0fa;
     border-radius: 10px 10px 0  0;
+    z-index: 10;
     ul{
       width: 90%;
       display: flex;
