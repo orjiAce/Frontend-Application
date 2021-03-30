@@ -97,23 +97,22 @@ $primary:#272e71;
       transition: 0.8s ease-in-out;
         color: #131313;
         .Attributes{
-          border: 1px solid #0070f3;
-        }
-        .Description{
-
           display: flex;
           width: 100%;
-          align-items: center;
+          align-items: flex-start;
+          justify-content: space-evenly;
+
           ul{
             display: flex;
             align-items: flex-start;
             justify-content: flex-start;
             flex-direction: column;
             span{
+              border-bottom:1px dashed $primary;
               font-weight: 600;
               font-size: 0.9em;
               padding: 0.5rem;
-              text-decoration: underline;
+
             }
             li{
               padding: 0.5rem;
@@ -121,6 +120,17 @@ $primary:#272e71;
               font-size: 0.8em;
             }
           }
+        }
+        .Description{
+
+          display: flex;
+          width: 100%;
+          align-items: center;
+   p{
+     font-size: 0.9em;
+     font-weight: 500;
+     letter-spacing: 1px;
+   }
         }
       }
     }
@@ -214,14 +224,14 @@ padding: 0.4rem;
     background-color: #f3f3f3;
     .centerBox{
       width: 100%;
-      height: 550px;
+      min-height: 800px;
       display: flex;
       align-items: center;
       flex-direction: column;
       justify-content: space-evenly;
       .productImage{
         width: 100%;
-        height: 25%;
+        height: 20%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -249,14 +259,83 @@ padding: 0.4rem;
       }
       .tabs{
         width: 100%;
-        height: 45%;
+        height: auto;
         background-color: #ffffff;
-        padding:0.5em;
+        padding:1rem;
         border-radius: 15px;
 
         box-shadow: 10px 10px 5px 0px rgba(210,210,210,0.75);
         -webkit-box-shadow: 10px 10px 5px 0px rgba(210,210,210,0.75);
         -moz-box-shadow: 10px 10px 5px 0px rgba(210,210,210,0.75);
+        .tabBtnWrap{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-evenly;
+          height: 50px;
+          button{
+            outline: none;
+            border: none;
+            height: 90%;
+            width: 40%;
+            font-family: Poppins, sans-serif;
+            background-color: #eeeeee;
+            border-radius: 10px;
+            cursor: pointer;
+          }
+          .active{
+            background-color: $primary;
+            color: #ffffff;
+            box-shadow: 5px 5px 3px 0px rgba(210,210,210,0.75);
+            -webkit-box-shadow: 5px 5px 3px  0px rgba(210,210,210,0.75);
+            -moz-box-shadow: 5px 5px 3px  0px rgba(210,210,210,0.75);
+          }
+        }
+        .tabContent{
+          width: 100%;
+          height: 85%;
+          transition: 0.8s ease-in-out;
+          color: #131313;
+          .Attributes{
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            ul{
+              width:100%;
+              display: flex;
+              align-items: flex-start;
+              justify-content: center;
+              flex-direction: column;
+              span{
+                border-bottom:1px dashed $primary;
+                font-weight: 600;
+                font-size: 0.9em;
+                padding: 0.5rem;
+
+              }
+              li{
+                padding: 0.5rem;
+                list-style-type: none;
+                font-size: 0.8em;
+
+              }
+            }
+          }
+          .Description{
+
+            display: flex;
+            width: 100%;
+            align-items: center;
+            p{
+              display: flex;
+              align-items: center;
+              font-size: 0.7em;
+
+            }
+          }
+        }
       }
     }
 

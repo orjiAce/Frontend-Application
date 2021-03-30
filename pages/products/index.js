@@ -3,8 +3,20 @@ import styles from '../../styles/Products.module.scss'
 import PropTypes, {object} from 'prop-types';
 import {getProduct} from "../../redux/actions/data-action";
 import {connect} from "react-redux";
-import {FaBriefcase, FaBuilding, FaUser} from "react-icons/all";
+import {FaBriefcase, FaBuilding, FaUser} from "react-icons/fa";
 
+import MoonLoader from "react-spinners/MoonLoader";
+import { css } from "@emotion/react";
+// Can be a string as well. Need to ensure each key-value pair ends with ;
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: #272e71;
+`;
+
+const Loader = () =>{
+    return <MoonLoader color={'#272e71'} loading={true} css={override} size={30} />
+}
 
 const Products = (props) => {
 
@@ -31,26 +43,26 @@ const Products = (props) => {
                 <section className={styles.productImage}>
 
                     {
-                        loading ? <div>Loading...</div> : data && <img src={data.picture} alt='product'/>
+                        loading ? <Loader/> : data && <img src={data.picture} alt='product'/>
                     }
 
                 </section>
                 <section className={styles.productMainInfo}>
                     {
-                        loading ? <div>Loading...</div> :
+                        loading ? <Loader/> :
                             data && <div className={styles.type}><span>Title:</span> {data.name}</div>
                     }
                     {
-                        loading ? <div>Loading...</div> :
+                        loading ? <Loader/>:
                             data && <div className={styles.type}><span>Type:</span> {data.type.name}</div>
                     }
                 </section>
                 <section className={styles.tabs}>
                     <div className={styles.tabBtnWrap}>
-                        <button className={ !tabSwitch && `${styles.active}` } onClick={() => setTabSwitch(prevState => !prevState)} disabled={!tabSwitch}>
+                        <button className={ `${!tabSwitch && styles.active} `} onClick={() => setTabSwitch(prevState => !prevState)} disabled={!tabSwitch}>
                             Description
                         </button>
-                        <button className={ tabSwitch && `${styles.active}` } onClick={() => setTabSwitch(prevState => !prevState)} disabled={tabSwitch}>
+                        <button className={ `${tabSwitch && styles.active} ` } onClick={() => setTabSwitch(prevState => !prevState)} disabled={tabSwitch}>
 Attributes
                         </button>
 
@@ -60,25 +72,60 @@ Attributes
                         {
                             !tabSwitch ? <div className={styles.Description}>
 
-                                <ul>
-                                    <span>Category</span>
-                                    {
-                                    loading ? <div>Loading...</div> :
-                                        data &&
-                                        data.categories.map(cat =>(
-                                            <li>
-                                                {
-                                                    cat.name
-                                                }
-                                            </li>
-                                        ))
-                                    }
 
-                                </ul>
+
+                                    {
+                                        loading ? <Loader/> :
+                                            data && <p>{data.description}</p>
+                                    }
 
                             </div> :
                                 <div className={styles.Attributes}>
-                                    Attributes
+                                    <ul>
+                                        <span>Categories</span>
+                                        {
+                                            loading ? <Loader/>:
+                                                data &&
+                                                data.categories.map((({name}, index)=>(
+                                                    <li key={index}>
+                                                        {
+                                                            name
+                                                        }
+                                                    </li>
+                                                )))
+                                        }
+
+                                    </ul>
+                                    <ul>
+                                        <span>BusinessModels</span>
+                                        {
+                                            loading ? <div>Loading...</div> :
+                                                data &&
+                                                data.businessModels.map((({name}, index)=>(
+                                                    <li key={index}>
+                                                        {
+                                                            name
+                                                        }
+                                                    </li>
+                                                )))
+                                        }
+
+                                    </ul>
+                                    <ul>
+                                        <span>TRL</span>
+                                        {
+                                            loading ? <Loader/>:
+                                                data &&
+                                                <li>
+
+                                                        {
+                                                            data.trl.name
+                                                        }
+                                                    </li>
+
+                                        }
+
+                                    </ul>
                                 </div>
                         }
                     </div>
@@ -89,26 +136,26 @@ Attributes
                     <div className={styles.userImage}>
 
                         {
-                            loading ? <div>Loading...</div> :
+                            loading ? <Loader/> :
                                 data && <img src={data.user.profilePicture} alt='user'/>
                         }
                     </div>
                     <div className={styles.username}>
                         {
-                            loading ? <div>Loading...</div> :
+                            loading ? <Loader/> :
                                 data && <div className=''><FaUser/> {data.user.firstName} {data.user.lastName}</div>
                         }
                     </div>
                     <div className={styles.company}>
 
                         {
-                            loading ? <div>Loading...</div> :
+                            loading ? <Loader/> :
                                 data && <div className=''><FaBuilding/> {data.company.name}</div>
                         }
                     </div>
                     <span className={styles.userPosition}>
                         {
-                            loading ? <div>Loading...</div> :
+                            loading ? <Loader/> :
                                 data && <div className=''><FaBriefcase/> {data.user.position}</div>
                         }
                     </span>

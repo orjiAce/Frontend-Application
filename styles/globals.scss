@@ -55,6 +55,11 @@ img{
     align-items: flex-start;
     justify-content: space-evenly;
     height: 120px;
+    .active{
+      background-color: $primary;
+      color: #ffffff;
+      border: none;
+    }
     li{
       width:80%;
       display: flex;
@@ -115,7 +120,7 @@ img{
     width:100%;
     flex: 1;
     height: 90px;
-    background-color: #eee;
+    background-color: #98a0fa;
     border-radius: 10px 10px 0  0;
     ul{
       width: 90%;
